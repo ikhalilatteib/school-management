@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\School;
 use App\Models\Student;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
+use App\Notifications\SendStudentReportOnDemand;
 use Illuminate\Http\Response;
 
 class StudentController extends Controller
@@ -32,7 +34,6 @@ class StudentController extends Controller
     }
 
 
-
     /**
      *
      * @param UpdateStudentRequest $request
@@ -57,4 +58,33 @@ class StudentController extends Controller
         $student->delete();
         return response(['success' => true]);
     }
+
+    /**
+     *
+     * @return Response
+     */
+
+    public function sendStudentReportOnDemand()
+    {
+        $students = Student::with('campus')->orderBy('name')->get();
+        auth()->user()->notify(new SendStudentReportOnDemand($students));
+        return response(['success' => true]);
+    }
+
+    /**
+     *
+     * @param $school
+     * @return Response
+     */
+    public function specificSchoolStudent($school)
+    {
+        $students = Student::query()->whereHas('campus', function ($query) use ($school) {
+            $query->whereHas('school', function ($query) use ($school) {
+                $query->where('name', $school);
+            });
+        })->get();
+        return response(['students' => $students]);
+    }
+
+
 }

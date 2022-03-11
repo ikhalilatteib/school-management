@@ -39,7 +39,7 @@ class StoreCampusRequest extends FormRequest
         return [
             'name' => 'required|string|min:3',
             'school_id' => 'required|exists:schools,id',
-            'country_id' => 'required|exists:countries,id|unique:campuses,country_id'
+            'country_id' => 'required|exists:countries,id'
         ];
 
     }

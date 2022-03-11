@@ -19,7 +19,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignIdFor(School::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignIdFor(Country::class)->unique()->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignIdFor(Country::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }

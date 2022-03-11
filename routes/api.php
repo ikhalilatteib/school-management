@@ -68,6 +68,13 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/{campus}/store', 'storeStudent')->name('store.student');
         Route::put('/{student}/update', 'updateStudent')->name('update.student');
         Route::delete('{student}/delete', 'destroyStudent')->name('destroy.student');
+
+        // send Student Report On-Demand
+        Route::get('/lists/tomail','sendStudentReportOnDemand')->name('send.student.report.on.demand');
+
+        // get student of a specific school
+        Route::get('/{school}','specificSchoolStudent')->name('specific.school.student');
+
     });
 });
 
