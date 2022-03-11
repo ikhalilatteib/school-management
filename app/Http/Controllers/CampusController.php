@@ -5,82 +5,56 @@ namespace App\Http\Controllers;
 use App\Models\Campus;
 use App\Http\Requests\StoreCampusRequest;
 use App\Http\Requests\UpdateCampusRequest;
+use Illuminate\Http\Response;
 
 class CampusController extends Controller
 {
     /**
-     * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function index()
+    public function indexCampus()
     {
-        //
+        $campus = Campus::with('school','country')->latest()->get();
+        return response(['Campus' => $campus]);
     }
 
     /**
-     * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param StoreCampusRequest $request
+     * @return Response
      */
-    public function create()
+
+    public function storeCampus(StoreCampusRequest $request)
     {
-        //
+        $campus =Campus::create($request->validated());
+        return response(['Campus' => $campus]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreCampusRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreCampusRequest $request)
-    {
-        //
-    }
 
     /**
-     * Display the specified resource.
      *
-     * @param  \App\Models\Campus  $campus
-     * @return \Illuminate\Http\Response
+     * @param UpdateCampusRequest $request
+     * @param Campus $campus
+     * @return Response
      */
-    public function show(Campus $campus)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Campus  $campus
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Campus $campus)
+    public function updateCampus(UpdateCampusRequest $request, Campus $campus)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateCampusRequest  $request
-     * @param  \App\Models\Campus  $campus
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateCampusRequest $request, Campus $campus)
-    {
-        //
+        $campus->update($request->validated());
+        abort_if(!$campus->wasChanged(), 404);
+        return response(['Campus' => $campus]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Campus  $campus
-     * @return \Illuminate\Http\Response
+     * @param Campus $campus
+     * @return Response
      */
-    public function destroy(Campus $campus)
+    public function destroyCampus(Campus $campus)
     {
-        //
+        $campus->delete();
+        return response(['success' => true]);
     }
 }

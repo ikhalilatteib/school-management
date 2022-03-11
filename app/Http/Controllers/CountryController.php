@@ -14,7 +14,7 @@ class CountryController extends Controller
      */
     public function indexCountry()
     {
-        $country = Country::with('users')->latest()->get();
+        $country = Country::with('user')->latest()->get();
         return response(['Country' => $country]);
     }
 
@@ -27,16 +27,6 @@ class CountryController extends Controller
     public function storeCountry(CountryRequest $request)
     {
         $country = auth()->user()->countries()->create($request->validated());
-        return response(['country' => $country]);
-    }
-
-    /**
-     *
-     * @param Country $country
-     * @return Response
-     */
-    public function showCountry(Country $country)
-    {
         return response(['country' => $country]);
     }
 

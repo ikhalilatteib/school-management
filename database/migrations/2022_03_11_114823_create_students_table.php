@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Country;
-use App\Models\School;
+use App\Models\Campus;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,11 +15,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('campuses', function (Blueprint $table) {
+        Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignIdFor(School::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignIdFor(Country::class)->unique()->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignIdFor(Campus::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignIdFor(User::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('campuses');
+        Schema::dropIfExists('students');
     }
 };

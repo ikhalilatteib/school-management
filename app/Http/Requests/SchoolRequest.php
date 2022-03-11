@@ -20,6 +20,13 @@ class SchoolRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'user_id'=>$this->user()->id,
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -28,7 +35,8 @@ class SchoolRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|min:3'
+            'name' => 'required|string|min:3',
+            'user_id'=>'required|exists:users,id'
         ];
     }
 }

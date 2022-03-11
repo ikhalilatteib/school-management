@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateCampusRequest extends FormRequest
+class UpdateStudentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize(): bool
+    public function authorize()
     {
         if (!$this->user()) {
             return false;
@@ -27,7 +27,7 @@ class UpdateCampusRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'=>'required|string|min:3'
+            'name'=>'required|string|min:3',
         ];
     }
 }

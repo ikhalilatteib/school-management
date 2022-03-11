@@ -15,7 +15,7 @@ class SchoolController extends Controller
      */
     public function indexSchools()
     {
-        $school = School::with('users')->latest()->get();
+        $school = School::with('user')->latest()->get();
         return response(['schools' => $school]);
     }
 
@@ -28,16 +28,6 @@ class SchoolController extends Controller
     public function storeSchools(SchoolRequest $request)
     {
         $school = auth()->user()->schools()->create($request->validated());
-        return response(['schools' => $school]);
-    }
-
-    /**
-     *
-     * @param School $school
-     * @return Response
-     */
-    public function showSchools(School $school)
-    {
         return response(['schools' => $school]);
     }
 

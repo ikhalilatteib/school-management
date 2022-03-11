@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreCampusRequest extends FormRequest
+class StoreStudentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -19,12 +19,11 @@ class StoreCampusRequest extends FormRequest
         return true;
     }
 
-
     protected function prepareForValidation()
     {
         $this->merge([
-            'school_id' => $this->route('school'),
-            'country_id' => $this->route('country')
+           'user_id'=>$this->user()->id,
+           'campus_id'=>$this->route('campus')
         ]);
     }
 
@@ -35,12 +34,10 @@ class StoreCampusRequest extends FormRequest
      */
     public function rules()
     {
-
         return [
-            'name' => 'required|string|min:3',
-            'school_id' => 'required|exists:schools,id',
-            'country_id' => 'required|exists:countries,id|unique:campuses,country_id'
+            'name'=>'required|string|min:3',
+            'user_id'=>'required|exists:users,id',
+            'campus_id'=>'required|exists:campuses,id'
         ];
-
     }
 }
