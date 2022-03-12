@@ -2,35 +2,37 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\StudentResource;
 use App\Models\School;
 use App\Models\Student;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Notifications\SendStudentReportOnDemand;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
 class StudentController extends Controller
 {
     /**
      *
-     * @return Response
+     * @return AnonymousResourceCollection
      */
     public function indexStudent()
     {
         $student = Student::with('user')->latest()->get();
-        return response(['Students' => $student]);
+        return StudentResource::collection($student);
     }
 
     /**
      *
      * @param StoreStudentRequest $request
-     * @return Response
+     * @return StudentResource
      */
 
     public function storeStudent(StoreStudentRequest $request)
     {
         $student = Student::create($request->validated());
-        return response(['Students' => $student]);
+        return new StudentResource($student);
     }
 
 
@@ -38,13 +40,13 @@ class StudentController extends Controller
      *
      * @param UpdateStudentRequest $request
      * @param Student $student
-     * @return Response
+     * @return StudentResource
      */
     public function updateStudent(UpdateStudentRequest $request, Student $student)
     {
         $student->update($request->validated());
-        abort_if(!$student->wasChanged(), 404);
-        return response(['Students' => $student]);
+        abort_if(!$student->wasChanged(), 403);
+        return new StudentResource($student);
     }
 
     /**
@@ -74,7 +76,7 @@ class StudentController extends Controller
     /**
      *
      * @param $school
-     * @return Response
+     * @return AnonymousResourceCollection
      */
     public function specificSchoolStudent($school)
     {
@@ -83,7 +85,7 @@ class StudentController extends Controller
                 $query->where('name', $school);
             });
         })->get();
-        return response(['students' => $students]);
+        return StudentResource::collection($students);
     }
 
 

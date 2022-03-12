@@ -2,33 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\SchoolResource;
 use App\Models\School;
 use App\Http\Requests\SchoolRequest;
 use App\Http\Requests\UpdateSchoolRequest;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
 class SchoolController extends Controller
 {
     /**
      *
-     * @return Response
+     * @return AnonymousResourceCollection
      */
     public function indexSchools()
     {
         $school = School::with('user')->latest()->get();
-        return response(['schools' => $school]);
+        return SchoolResource::collection($school);
     }
 
     /**
      *
      * @param SchoolRequest $request
-     * @return Response
+     * @return SchoolResource
      */
 
     public function storeSchools(SchoolRequest $request)
     {
         $school = auth()->user()->schools()->create($request->validated());
-        return response(['schools' => $school]);
+        return new SchoolResource($school);
     }
 
 
@@ -36,13 +38,13 @@ class SchoolController extends Controller
      *
      * @param SchoolRequest $request
      * @param School $school
-     * @return Response
+     * @return SchoolResource
      */
     public function updateSchools(SchoolRequest $request, School $school)
     {
         $school->update($request->validated());
-        abort_if(!$school->wasChanged(), 404);
-        return response(['schools' => $school]);
+        abort_if(!$school->wasChanged(), 403);
+        return new SchoolResource($school);
     }
 
     /**

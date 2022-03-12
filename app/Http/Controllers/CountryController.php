@@ -3,31 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CountryRequest;
+use App\Http\Resources\CountryResource;
 use App\Models\Country;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
 class CountryController extends Controller
 {
     /**
      *
-     * @return Response
+     * @return AnonymousResourceCollection
      */
     public function indexCountry()
     {
         $country = Country::with('user')->latest()->get();
-        return response(['Country' => $country]);
+        return CountryResource::collection($country);
     }
 
     /**
      *
      * @param CountryRequest $request
-     * @return Response
+     * @return CountryResource
      */
 
     public function storeCountry(CountryRequest $request)
     {
         $country = auth()->user()->countries()->create($request->validated());
-        return response(['country' => $country]);
+        return new CountryResource($country);
     }
 
 
@@ -35,13 +37,13 @@ class CountryController extends Controller
      *
      * @param CountryRequest $request
      * @param Country $country
-     * @return Response
+     * @return CountryResource
      */
     public function updateCountry(CountryRequest $request, Country $country)
     {
         $country->update($request->validated());
-        abort_if(!$country->wasChanged(), 404);
-        return response(['country' => $country]);
+        abort_if(!$country->wasChanged(), 403);
+        return new CountryResource($country);
     }
 
     /**
